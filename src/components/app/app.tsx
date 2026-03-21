@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   Routes,
   Route,
@@ -19,20 +20,44 @@ import '../../index.css';
 import styles from './app.module.css';
 
 import { AppHeader, Modal, IngredientDetails, OrderInfo } from '@components';
+import { Preloader } from '@ui';
 import { ProtectedRoute } from '../protected-route';
+import { useDispatch, useSelector } from '../../services/store';
+import {
+  fetchIngredients,
+  getIngredientsLoading,
+  getIngredientsError
+} from '../../services/slices/ingredientsSlice';
 
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const backgroundLocation = location.state?.background;
+
+  const isLoading = useSelector(getIngredientsLoading);
+  const error = useSelector(getIngredientsError);
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   const closeModal = () => {
     navigate(-1);
   };
 
+  if (isLoading) {
+    return <Preloader />;
+  }
+
   return (
     <div className={styles.app}>
       <AppHeader />
+      {error && (
+        <div className={`${styles.error} text text_type_main-medium pt-4`}>
+          {error}
+        </div>
+      )}
       <Routes location={backgroundLocation || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
