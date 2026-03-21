@@ -1,5 +1,8 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { useSelector } from '../services/store';
+import { getIsAuthChecked, getUserData } from '../services/slices/userSlice';
+import { Preloader } from '@ui';
 
 type ProtectedRouteProps = {
   onlyUnAuth?: boolean;
@@ -10,15 +13,13 @@ export const ProtectedRoute = ({
   onlyUnAuth = false,
   children
 }: ProtectedRouteProps) => {
-  // TODO: Будет заменено на данные из стора в следующем шаге
-  const isAuthChecked = true; // Пока заглушка
-  const user = null; // Пока заглушка
+  const isAuthChecked = useSelector(getIsAuthChecked);
+  const user = useSelector(getUserData);
 
   const location = useLocation();
 
   if (!isAuthChecked) {
-    // Заглушка, пока проверяется авторизация
-    return null;
+    return <Preloader />;
   }
 
   if (!onlyUnAuth && !user) {
