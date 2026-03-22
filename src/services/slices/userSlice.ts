@@ -69,7 +69,7 @@ export const checkUserAuth = createAsyncThunk(
       try {
         await dispatch(getUser()).unwrap();
       } catch (e) {
-        // Ошибка при запросе (например, токен невалиден) 
+        // Ошибка при запросе (например, токен невалиден)
         // очищаем сторадж
         deleteCookie('accessToken');
         localStorage.removeItem('refreshToken');
@@ -108,12 +108,12 @@ const userSlice = createSlice({
       .addCase(checkUserAuth.rejected, (state) => {
         state.isAuthChecked = true; // мы проверили - юзера нет, всё ок
       })
-      
+
       // Запрос данных пользователя
       .addCase(getUser.fulfilled, (state, action) => {
         state.user = action.payload;
       })
-      
+
       // Логин
       .addCase(loginUser.pending, (state) => {
         state.error = null;
@@ -127,7 +127,7 @@ const userSlice = createSlice({
         state.error = action.error.message || 'Ошибка авторизации';
         state.loading = false;
       })
-      
+
       // Регистрация
       .addCase(registerUser.pending, (state) => {
         state.error = null;
@@ -155,7 +155,7 @@ const userSlice = createSlice({
         state.error = action.error.message || 'Ошибка обновления данных';
         state.loading = false;
       })
-      
+
       // Логаут
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
@@ -169,6 +169,11 @@ const userSlice = createSlice({
   }
 });
 
-export const { getIsAuthChecked, getUserData, getUserError, getUserLoading } = userSlice.selectors;
+export const getIsAuthChecked = (state: { user: UserState }) =>
+  state.user.isAuthChecked;
+export const getUserData = (state: { user: UserState }) => state.user.user;
+export const getUserError = (state: { user: UserState }) => state.user.error;
+export const getUserLoading = (state: { user: UserState }) =>
+  state.user.loading;
 
 export default userSlice.reducer;
