@@ -1,14 +1,10 @@
 import orderBurgerReducer, {
+  initialState,
   orderBurger,
   clearOrder
 } from './orderBurgerSlice';
 
 describe('orderBurgerSlice', () => {
-  const initialState = {
-    orderRequest: false,
-    orderModalData: null,
-    error: null
-  };
 
   it('должен очищать заказ при clearOrder', () => {
     const state = {

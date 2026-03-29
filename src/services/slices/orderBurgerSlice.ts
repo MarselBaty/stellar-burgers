@@ -21,7 +21,7 @@ interface OrderBurgerState {
   error: string | null;
 }
 
-const initialState: OrderBurgerState = {
+export const initialState: OrderBurgerState = {
   orderRequest: false,
   orderModalData: null,
   error: null

@@ -5,5 +5,6 @@ export default defineConfig({
     setupNodeEvents(on, config) {
     },
     baseUrl: "http://localhost:4000",
+    supportFile: false
   },
 });

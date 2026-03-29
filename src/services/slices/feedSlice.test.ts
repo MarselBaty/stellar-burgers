@@ -1,13 +1,6 @@
-import feedReducer, { fetchFeed } from './feedSlice';
+import feedReducer, { fetchFeed, initialState } from './feedSlice';
 
 describe('feedSlice', () => {
-  const initialState = {
-    orders: [],
-    total: 0,
-    totalToday: 0,
-    loading: false,
-    error: null
-  };
 
   it('должен выставлять loading в true при fetchFeed.pending', () => {
     const action = { type: fetchFeed.pending.type };

@@ -1,13 +1,9 @@
 import profileOrdersReducer, {
+  initialState,
   getProfileOrders
 } from './profileOrdersSlice';
 
 describe('profileOrdersSlice', () => {
-  const initialState = {
-    orders: [],
-    loading: false,
-    error: null
-  };
 
   it('должен выставлять loading в true при getProfileOrders.pending', () => {
     const action = { type: getProfileOrders.pending.type };

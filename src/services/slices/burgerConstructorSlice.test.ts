@@ -1,4 +1,5 @@
 import burgerConstructorReducer, {
+  initialState,
   addIngredient,
   removeIngredient,
   moveUpIngredient,
@@ -8,10 +9,6 @@ import burgerConstructorReducer, {
 import { TConstructorIngredient } from '../../utils/types';
 
 describe('burgerConstructorSlice', () => {
-  const initialState = {
-    bun: null,
-    ingredients: []
-  };
 
   const mockBun: TConstructorIngredient = {
     _id: '123',

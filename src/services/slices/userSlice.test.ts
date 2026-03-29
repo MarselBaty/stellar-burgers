@@ -1,4 +1,5 @@
 import userReducer, {
+  initialState,
   checkUserAuth,
   getUser,
   loginUser,
@@ -8,12 +9,6 @@ import userReducer, {
 } from './userSlice';
 
 describe('userSlice', () => {
-  const initialState = {
-    isAuthChecked: false,
-    user: null,
-    error: null,
-    loading: false
-  };
 
   it('checkUserAuth.pending', () => {
     const state = userReducer(initialState, {

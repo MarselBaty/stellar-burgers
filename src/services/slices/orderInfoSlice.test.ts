@@ -1,14 +1,10 @@
 import orderInfoReducer, {
+  initialState,
   getOrderInfo,
   clearOrderInfo
 } from './orderInfoSlice';
 
 describe('orderInfoSlice', () => {
-  const initialState = {
-    orderData: null,
-    loading: false,
-    error: null
-  };
 
   it('должен очищать данные заказа при clearOrderInfo', () => {
     const state = { ...initialState, orderData: { number: 123 } as any, error: 'err' };

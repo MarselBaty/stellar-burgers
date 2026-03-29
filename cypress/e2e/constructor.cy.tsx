@@ -1,49 +1,73 @@
+const SELECTOR_MODALS = '#modals';
+const SELECTOR_MODALS_BUTTON = '#modals button';
+const SELECTOR_CONSTRUCTOR = '.constructor-element';
+const SELECTOR_OVERLAY = '[data-cy="modal-overlay"]';
+
+const TEXT_BUN = 'Краторная булка N-200i';
+const TEXT_MAIN = 'Биокотлета из марсианской Магнолии';
+const TEXT_DETAILS = 'Детали ингредиента';
+const TEXT_ORDER = 'Оформить заказ';
+
 describe('Проверка конструктора бургера', () => {
   beforeEach(() => {
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' });
     cy.viewport(1300, 800);
-    cy.visit('/');
   });
 
   describe('Тестирование добавления ингредиентов', () => {
+    beforeEach(() => {
+      cy.visit('/');
+    });
+
     it('Должен добавлять булку и начинку в конструктор', () => {
-      cy.contains('Добавить').first().click();
-      cy.contains('Добавить').last().click();
-      cy.get('.constructor-element').should('contain', 'Краторная булка N-200i');
-      cy.get('.constructor-element').should('contain', 'Биокотлета из марсианской Магнолии');
+      cy.contains('li', TEXT_BUN).contains('Добавить').click();
+      cy.contains('li', TEXT_MAIN).contains('Добавить').click();
+
+      cy.get(SELECTOR_CONSTRUCTOR).should('contain', TEXT_BUN);
+      cy.get(SELECTOR_CONSTRUCTOR).should('contain', TEXT_MAIN);
     });
   });
 
   describe('Тестирование модальных окон ингредиентов', () => {
+    beforeEach(() => {
+      cy.visit('/');
+    });
+
     it('Должно открываться модальное окно с описанием ингредиента', () => {
-      cy.contains('Краторная булка N-200i').click();
-      cy.get('#modals').should('contain', 'Детали ингредиента');
-      cy.get('#modals').should('contain', 'Краторная булка N-200i');
-      cy.get('#modals').should('contain', 'Калории,ккал');
-      cy.get('#modals').should('contain', '420');
+      cy.contains(TEXT_BUN).click();
+      cy.get(SELECTOR_MODALS).should('contain', TEXT_DETAILS);
+      cy.get(SELECTOR_MODALS).should('contain', TEXT_BUN);
+      cy.get(SELECTOR_MODALS).should('contain', 'Калории, ккал');
+      cy.get(SELECTOR_MODALS).should('contain', '420');
     });
 
     it('Должно закрываться по клику на крестик', () => {
-      cy.contains('Краторная булка N-200i').click();
-      cy.get('#modals').should('contain', 'Детали ингредиента');
-      cy.get('#modals button').click();
-      cy.get('#modals').should('be.empty');
+      cy.contains(TEXT_BUN).click();
+      cy.get(SELECTOR_MODALS).should('contain', TEXT_DETAILS);
+      cy.get(SELECTOR_MODALS_BUTTON).click();
+      cy.get(SELECTOR_MODALS).should('be.empty');
     });
 
     it('Должно закрываться по клику на оверлей', () => {
-      cy.contains('Краторная булка N-200i').click();
-      cy.get('#modals').should('contain', 'Детали ингредиента');
-      cy.get('[data-cy="modal-overlay"]').click({ force: true });
-      cy.get('#modals').should('be.empty');
+      cy.contains(TEXT_BUN).click();
+      cy.get(SELECTOR_MODALS).should('contain', TEXT_DETAILS);
+      cy.get(SELECTOR_OVERLAY).click({ force: true });
+      cy.get(SELECTOR_MODALS).should('be.empty');
     });
   });
 
   describe('Тестирование оформления заказа', () => {
     beforeEach(() => {
+      cy.intercept('GET', 'api/auth/user', { fixture: 'user.json' });
+      cy.intercept('POST', 'api/orders', { fixture: 'order.json' }).as(
+        'postOrder'
+      );
+
+      // Устанавливаем токены перед открытием приложения
       window.localStorage.setItem('refreshToken', 'test-refreshToken');
       cy.setCookie('accessToken', 'test-accessToken');
-      cy.intercept('GET', 'api/auth/user', { fixture: 'user.json' });
-      cy.intercept('POST', 'api/orders', { fixture: 'order.json' }).as('postOrder');
+
+      cy.visit('/');
     });
 
     afterEach(() => {
@@ -52,14 +76,17 @@ describe('Проверка конструктора бургера', () => {
     });
 
     it('Должен успешно оформлять заказ и очищать конструктор', () => {
-      cy.contains('Добавить').first().click();
-      cy.contains('Добавить').last().click();
-      cy.contains('Оформить заказ').click();
+      cy.contains('li', TEXT_BUN).contains('Добавить').click();
+      cy.contains('li', TEXT_MAIN).contains('Добавить').click();
+
+      cy.contains(TEXT_ORDER).click();
       cy.wait('@postOrder');
-      cy.get('#modals').should('contain', '1337');
-      cy.get('#modals button').click();
-      cy.get('#modals').should('be.empty');
-      cy.get('.constructor-element').should('not.exist');
+
+      cy.get(SELECTOR_MODALS).should('contain', '1337');
+      cy.get(SELECTOR_MODALS_BUTTON).click();
+      cy.get(SELECTOR_MODALS).should('be.empty');
+
+      cy.get(SELECTOR_CONSTRUCTOR).should('not.exist');
     });
   });
 });
