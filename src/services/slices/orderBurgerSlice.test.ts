@@ -11,16 +11,14 @@ describe('orderBurgerSlice', () => {
   };
 
   it('должен очищать заказ при clearOrder', () => {
-    // @ts-ignore
     const state = {
       ...initialState,
-      orderModalData: { number: 123 },
+      orderModalData: { number: 123 } as any,
       orderRequest: true,
       error: 'err'
     };
-    // @ts-ignore
     const action = clearOrder();
-    const newState = orderBurgerReducer(state, action);
+    const newState = orderBurgerReducer(state as any, action);
     expect(newState).toEqual(initialState);
   });
 
@@ -37,7 +35,6 @@ describe('orderBurgerSlice', () => {
       type: orderBurger.fulfilled.type,
       payload: { order: mockOrder }
     };
-    // @ts-ignore
     const state = orderBurgerReducer(initialState, action);
     expect(state.orderRequest).toBe(false);
     expect(state.orderModalData).toEqual(mockOrder);

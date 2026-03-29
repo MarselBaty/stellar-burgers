@@ -1,5 +1,4 @@
 import { rootReducer } from './rootReducer';
-import { store } from './store';
 
 describe('rootReducer', () => {
   it('должен возвращать начальное состояние при вызове с undefined состоянием и неизвестным экшеном', () => {

@@ -22,7 +22,6 @@ describe('profileOrdersSlice', () => {
       type: getProfileOrders.fulfilled.type,
       payload: mockOrders
     };
-    // @ts-ignore
     const state = profileOrdersReducer(initialState, action);
     expect(state.loading).toBe(false);
     expect(state.orders).toEqual(mockOrders);

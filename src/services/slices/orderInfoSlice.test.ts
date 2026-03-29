@@ -11,10 +11,9 @@ describe('orderInfoSlice', () => {
   };
 
   it('должен очищать данные заказа при clearOrderInfo', () => {
-    // @ts-ignore
-    const state = { ...initialState, orderData: { number: 123 }, error: 'err' };
+    const state = { ...initialState, orderData: { number: 123 } as any, error: 'err' };
     const action = clearOrderInfo();
-    const newState = orderInfoReducer(state, action);
+    const newState = orderInfoReducer(state as any, action);
     expect(newState.orderData).toBeNull();
   });
 
@@ -31,7 +30,6 @@ describe('orderInfoSlice', () => {
       type: getOrderInfo.fulfilled.type,
       payload: mockOrder
     };
-    // @ts-ignore
     const state = orderInfoReducer(initialState, action);
     expect(state.loading).toBe(false);
     expect(state.orderData).toEqual(mockOrder);
